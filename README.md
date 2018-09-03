@@ -7,6 +7,11 @@ Learn how to use Docker and Metricbeat to monitor you host system, all your node
 > This project is built for example and testing.  
 > DO NOT use any part of it in production unless you know exactly what you are doing.
 
+>지속적인 도커로그로 인해 하드가 부족할 수 있으니 도커의 looging 드라이버를 none 으로 설정하시거나
+충분한 하드 용량을 확보해 주셔야 합니다.
+관련 문서는 github에 존재합니다. 찾기 어려우시면 문의주시면 감사하겠습니다. 
+
+
 ## Software versions
 
 | Name  | Version |
