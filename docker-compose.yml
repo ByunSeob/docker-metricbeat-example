@@ -22,5 +22,8 @@ services:
       - "elasticsearch:REMOTE_IP" # The IP of docker0 interface to access host from container
       - "kibana:REMOTE_IP" # The IP of docker0 interface to access host from container
     network_mode: host # Mandatory to monitor HOST filesystem, memory, processes,...
+    logging:
+      driver: "none"
+
 
 
