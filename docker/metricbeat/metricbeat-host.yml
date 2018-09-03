@@ -19,6 +19,7 @@ metricbeat.modules:
 #     - socket         # Sockets and connection info (linux only)
   enabled: true
   period: 5s
+
   processes: ['.*']
 
   cpu.metrics:  ["percentages"]  # The other available options are normalized_percentages and ticks.
