@@ -88,7 +88,7 @@ kibana uses an image, skipping
 ## Host Monitoring
 
 docker-compose.yml 
-REMORE_IP -> aws ELK monitoring & kafka on IP change
+REMOTE_IP -> aws ELK monitoring & kafka on IP change
 
 ```yaml
 metricbeat-host:
@@ -97,8 +97,8 @@ metricbeat-host:
     - HOST_ELASTICSEARCH=elasticsearch:9222
     - HOST_KIBANA=kibana:5666
   extra_hosts:
-    - "elasticsearch:REMORE_IP" # The IP of docker0 interface to access host from container
-    - "kibana:REMORE_IP" # The IP of docker0 interface to access host from container
+    - "elasticsearch:REMOTE_IP" # The IP of docker0 interface to access host from container
+    - "kibana:REMOTE_IP" # The IP of docker0 interface to access host from container
   network_mode: host # Mandatory to monitor host filesystem, memory, processes,...
 ```
 
