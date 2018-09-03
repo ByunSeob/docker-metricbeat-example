@@ -1,21 +1,55 @@
 metricbeat.modules:
 
 #------------------------------- System Module -------------------------------
+#- module: system
+#  metricsets: ["cpu", "load", "filesystem", "fsstat", "memory", "network", "process", "core", "diskio", "socket"]
+#  period: 5s
+#  enabled: true
+#  processes: ['.*']
+#
+#  cpu.metrics:  ["percentages"]
+#  core.metrics: ["percentages"]
 - module: system
-  metricsets: ["cpu", "load", "filesystem", "fsstat", "memory", "network", "process", "core", "diskio", "socket"]
-  period: 5s
+  metricsets:
+     - cpu             # CPU usage
+      load            # CPU load averages
+     - memory          # Memory usage
+     - network         # Network IO
+     - process         # Per process metrics
+     - process_summary # Process summary
+     - uptime          # System Uptime
+     - core           # Per CPU core usage
+     - diskio         # Disk IO
+     - filesystem     # File system usage for each mountpoint
+     - fsstat         # File system summary metrics
+     - raid           # Raid
+     - socket         # Sockets and connection info (linux only)
   enabled: true
+  period: 5s
   processes: ['.*']
 
-  cpu.metrics:  ["percentages"]
-  core.metrics: ["percentages"]
+  cpu.metrics:  ["percentages"]  # The other available options are normalized_percentages and ticks.
+  core.metrics: ["percentages"]  # The other available option is ticks.
 
 #------------------------------- Docker Module -------------------------------
+#- module: docker
+#  metricsets: ["container", "cpu", "diskio", "healthcheck", "info", "memory", "network"]
+#  hosts: ["unix:///var/run/docker.sock"]
+#  enabled: true
+#  period: 5s
 - module: docker
-  metricsets: ["container", "cpu", "diskio", "healthcheck", "info", "memory", "network"]
+  metricsets:
+    - "container"
+    - "cpu"
+    - "diskio"
+    - "healthcheck"
+    - "info"
+    - "image"
+    - "memory"
+    - "network"
   hosts: ["unix:///var/run/docker.sock"]
+  period: 10s
   enabled: true
-  period: 5s
 
 #-------------------------- Elasticsearch output ------------------------------
 output.elasticsearch:

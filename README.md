@@ -29,7 +29,7 @@ Learn how to use Docker and Metricbeat to monitor you host system, all your node
 Clone the repository
 
 ```bash
-git clone git@github.com:ypereirareis/docker-metricbeat-example.git && cd docker-metricbeat-example
+git clone https://github.com/ByunSeob/docker-metricbeat-example.git && cd docker-metricbeat-example
 ```
 
 Setup your host (**sudo/root needed**).
