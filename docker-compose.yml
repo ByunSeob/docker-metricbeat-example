@@ -19,8 +19,8 @@ services:
       - "HOST_ELASTICSEARCH=elasticsearch:9222"
       - "HOST_KIBANA=kibana:5666"
     extra_hosts:
-      - "elasticsearch:13.125.38.104" # The IP of docker0 interface to access host from container
-      - "kibana:13.125.38.104" # The IP of docker0 interface to access host from container
+      - "elasticsearch:REMOTE_IP" # The IP of docker0 interface to access host from container
+      - "kibana:REMOTE_IP" # The IP of docker0 interface to access host from container
     network_mode: host # Mandatory to monitor HOST filesystem, memory, processes,...
 
 
