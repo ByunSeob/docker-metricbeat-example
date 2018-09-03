@@ -87,8 +87,8 @@ kibana uses an image, skipping
 
 ## Host Monitoring
 
-We are assuming your `docker0` interface IP is: `inet 172.17.0.1  netmask 255.255.0.0  broadcast 0.0.0.0`
-If not the case, please adjust the configuration in `docker-compose.yml` file for service `metricbeat-host`.
+docker-compose.yml 
+REMORE_IP -> aws ELK monitoring & kafka on IP change
 
 ```yaml
 metricbeat-host:
@@ -97,8 +97,8 @@ metricbeat-host:
     - HOST_ELASTICSEARCH=elasticsearch:9222
     - HOST_KIBANA=kibana:5666
   extra_hosts:
-    - "elasticsearch:172.17.0.1" # The IP of docker0 interface to access host from container
-    - "kibana:172.17.0.1" # The IP of docker0 interface to access host from container
+    - "elasticsearch:REMORE_IP" # The IP of docker0 interface to access host from container
+    - "kibana:REMORE_IP" # The IP of docker0 interface to access host from container
   network_mode: host # Mandatory to monitor host filesystem, memory, processes,...
 ```
 
@@ -116,23 +116,17 @@ Creating metricbeat-metricbeat-host ...
 Creating metricbeat-metricbeat-host ... done
 ```
 
-* You can check everything is OK, and you should have 3 containers running...
-* Be careful Elasticsearch and Kibana ports are exposed on 0.0.0.0 network (every IP address).
-* Default Metricbeat dashboard are automatically loaded into Kibana (`setup.dashboards.enabled: true`)
-
 ```bash
 $ docker ps                 
 CONTAINER ID        IMAGE                                                 COMMAND                  CREATED             STATUS              PORTS                              NAMES
 e25a76b4f1e4        dockermetricbeatexample_metricbeat-host               "/usr/local/bin/do..."   2 minutes ago       Up 2 seconds                                           metricbeat-metricbeat-host
-27668d971ddf        docker.elastic.co/kibana/kibana:6.0.0                 "/bin/bash /usr/lo..."   2 minutes ago       Up 2 minutes        0.0.0.0:5666->5601/tcp             metricbeat-kibana
-af93d8214167        docker.elastic.co/elasticsearch/elasticsearch:6.0.0   "/usr/local/bin/do..."   2 minutes ago       Up 2 minutes        9300/tcp, 0.0.0.0:9222->9200/tcp   metricbeat-elasticsearch
 ```
 
 If everything is fine, you should be able to access Kibana, and Monitoring dashboard:
 
-* Kibana => [http://127.0.0.1:5666](http://127.0.0.1:5666/app/kibana)
-* Dashboard list => [http://127.0.0.1:5666/app/kibana#/dashboards?_g=()](http://127.0.0.1:5666/app/kibana#/dashboards?_g=())
-* System Overview => [http://127.0.0.1:5666/app/kibana#/dashboard/Metricbeat-system-overview?_g=()](http://127.0.0.1:5666/app/kibana#/dashboard/Metricbeat-system-overview?_g=())
+* Kibana => [http://REMOTE_IP:5666](http://127.0.0.1:5666/app/kibana)
+* Dashboard list => [http://REMOTE_IP:5666/app/kibana#/dashboards?_g=()](http://127.0.0.1:5666/app/kibana#/dashboards?_g=())
+* System Overview => [http://REMOTE_IP:5666/app/kibana#/dashboard/Metricbeat-system-overview?_g=()](http://127.0.0.1:5666/app/kibana#/dashboard/Metricbeat-system-overview?_g=())
 
 **Host Dashboard**
 
@@ -142,92 +136,12 @@ If everything is fine, you should be able to access Kibana, and Monitoring dashb
 
 ![Docker dashboard](./img/docker.png)
 
-## Services Monitoring
-
-First of all you need to start the Metricbeat container to monitor services.
-
-```bash
-make start-monitoring
-```
-
-You should now have an extra Metricbeat container for services (called `metricbeat-metricbeat-services`).
-
-```bash
-$ docker ps
-CONTAINER ID        IMAGE                                                 COMMAND                  CREATED             STATUS              PORTS                              NAMES
-d934ee72db19        dockermetricbeatexample_metricbeat                    "/usr/local/bin/do..."   4 minutes ago       Up 4 minutes                                           metricbeat-metricbeat-services
-...
-```
-
 ### Start/Stop all services
 
 ```bash
 make start-all
 make stop-all
 ```
-
-### Start/Stop services one by one
-
-#### Apache
-
-* Compose file: [./docker-compose.apache.yml](./docker-compose.apache.yml)
-* Start: `make start-apache`
-* Stop: `make stop-apache`
-
-```bash
-4f4cb6e72a39    httpd:2.4   "httpd-foreground"  11 minutes ago  Up About a minute   80/tcp  metricbeat-apache
-```
-
-#### MongoDB
-
-* Compose file: [./docker-compose.mongodb.yml](./docker-compose.mongodb.yml)
-* Start: `make start-mongodb`
-* Stop: `make stop-mongodb`
-
-```bash
-a379163bc90d    mongo   "docker-entrypoint..."   11 minutes ago    Up About a minute   27017/tcp    metricbeat-mongodb
-```
-
-#### MySQL
-
-* Compose file: [./docker-compose.mysql.yml](./docker-compose.mysql.yml)
-* Start: `make start-mysql`
-* Stop: `make stop-mysql`
-
-```bash
-3ae8e0c7c1e3    mysql:8.0   "docker-entrypoint..."   11 minutes ago   Up About a minute   3306/tcp metricbeat-mysql
-```
-
-#### Nginx
-
-* Compose file: [./docker-compose.nginx.yml](./docker-compose.nginx.yml)
-* Start: `make start-nginx`
-* Stop: `make stop-nginx`
-
-```bash
-da1a01c36c4c    nginx:1.13.7-alpine "nginx -g 'daemon ..."   11 minutes ago   Up About a minute   80/tcp  metricbeat-nginx
-```
-
-#### RabbitMq
-
-* Compose file: [./docker-compose.rabbitmq.yml](./docker-compose.rabbitmq.yml)
-* Start: `make start-rabbitmq`
-* Stop: `make stop-rabbitmq`
-
-```bash
-6c072660a008    bijukunjummen/rabbitmq-server:3.6.5 "/bin/sh -c /opt/r..."   14 minutes ago      Up 2 seconds   4369/tcp, 5672/tcp, 9100-9105/tcp, 25672/tcp, 127.0.0.1:1234->15672/tcp   metricbeat-rabbitmq
-```
-
-#### Redis
-
-* Compose file: [./docker-compose.redis.yml](./docker-compose.redis.yml)
-* Start: `make start-redis`
-* Stop: `make stop-redis`
-
-```bash
-52be9d662f8f    redis:3.2.11-alpine "docker-entrypoint..."   11 minutes ago Up About a minute   6379/tcp    metricbeat-redis
-```
-
 #### Others
 
 More to come
@@ -249,12 +163,6 @@ a400ee0b914a
 43d22a57fde4
 c1ca7e0d7e6a
 All METRICBEAT containers removed !
-```
-
-## (Re)start everything
-
-```bash
-$ make install
 ```
 
 ## LICENSE
