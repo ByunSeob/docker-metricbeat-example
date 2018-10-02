@@ -94,6 +94,7 @@ kibana uses an image, skipping
 
 docker-compose.yml 
 REMOTE_IP -> aws ELK monitoring & kafka on IP change
+MY_HOST -> host change
 
 ```yaml
 metricbeat-host:
@@ -101,6 +102,7 @@ metricbeat-host:
   environment:
     - HOST_ELASTICSEARCH=elasticsearch:9222
     - HOST_KIBANA=kibana:5666
+  command: metricbeat -e  -E name=MY_HOST
   extra_hosts:
     - "elasticsearch:REMOTE_IP" # The IP of docker0 interface to access host from container
     - "kibana:REMOTE_IP" # The IP of docker0 interface to access host from container

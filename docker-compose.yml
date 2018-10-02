@@ -18,6 +18,7 @@ services:
       - "WAIT_FOR_HOSTS=elasticsearch:9222 kibana:5666"
       - "HOST_ELASTICSEARCH=elasticsearch:9222"
       - "HOST_KIBANA=kibana:5666"
+    command: metricbeat -e  -E name=monitoring
     extra_hosts:
       - "elasticsearch:REMOTE_IP" # The IP of docker0 interface to access host from container
       - "kibana:REMOTE_IP" # The IP of docker0 interface to access host from container
